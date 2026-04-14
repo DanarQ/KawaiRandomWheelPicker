@@ -10,7 +10,7 @@ const DEFAULT_DATA = [
     style: { backgroundColor: "#ffb3c6", textColor: "#5c3d5e" },
   },
   {
-    option: "Sushi",
+    option: "Burger",
     style: { backgroundColor: "#b5ead7", textColor: "#5c3d5e" },
   },
   {
@@ -18,7 +18,7 @@ const DEFAULT_DATA = [
     style: { backgroundColor: "#ffdac1", textColor: "#5c3d5e" },
   },
   {
-    option: "Tacos",
+    option: "Nasi Goreng",
     style: { backgroundColor: "#c7ceea", textColor: "#5c3d5e" },
   },
 ];

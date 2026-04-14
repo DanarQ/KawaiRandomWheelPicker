@@ -62,7 +62,7 @@ function WheelComponent({ data }) {
         onClick={handleSpinClick}
         disabled={mustSpin || data.length < 2}
       >
-        {mustSpin ? "Spinning... ❤️" : "SPIN! (●'◡'●)"}
+        {mustSpin ? "Spinning..." : "SPIN! (●'◡'●)"}
       </button>
 
       {result && (
