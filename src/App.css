@@ -53,14 +53,18 @@
 }
 
 .wheel-wrapper {
-  position: relative;
+  display: grid;
+}
+
+/* Both wheel and center overlay share the same grid cell */
+.wheel-wrapper > * {
+  grid-area: 1 / 1;
 }
 
 .wheel-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   pointer-events: none;
   z-index: 10;
   filter: drop-shadow(0 2px 6px rgba(244, 143, 177, 0.4));
@@ -393,4 +397,99 @@
   font-size: 1rem;
   font-weight: 700;
   padding: 24px 0;
+}
+
+/* ── Responsive — Mobile (≤ 480px, covers all iPhone sizes) ── */
+@media (max-width: 480px) {
+  .app {
+    padding: 12px 16px;
+    padding-top: max(12px, env(safe-area-inset-top));
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+
+  .app-header {
+    gap: 10px;
+    padding: 16px 0 16px;
+  }
+
+  /* Scale down kawaii characters in header */
+  .app-header > svg {
+    transform: scale(0.75);
+    transform-origin: center;
+  }
+
+  .app-title {
+    font-size: 1.35rem;
+  }
+
+  .app-main {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+
+  /* ── Wheel ── */
+  /* react-custom-roulette uses width:80vw natively, no scaling needed */
+  .wheel-section {
+    min-width: unset;
+    width: 100%;
+    padding: 20px 16px;
+    border-radius: 22px;
+  }
+
+  .spin-btn {
+    padding: 12px 36px;
+    font-size: 1.05rem;
+    width: 100%;
+  }
+
+  .result-card {
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .result-value {
+    font-size: 1.25rem;
+  }
+
+  /* ── Option Form ── */
+  .option-form {
+    min-width: unset;
+    max-width: 100%;
+    width: 100%;
+    padding: 20px 16px;
+    border-radius: 22px;
+  }
+
+  .form-input-row {
+    gap: 6px;
+  }
+
+  .option-input {
+    font-size: 0.9rem;
+    padding: 9px 14px;
+  }
+
+  .add-btn {
+    padding: 9px 14px;
+    font-size: 0.88rem;
+  }
+
+  .color-input {
+    width: 36px;
+    height: 36px;
+  }
+
+  .option-list {
+    max-height: 240px;
+  }
+}
+
+/* ── Responsive — Small phones (≤ 375px, iPhone SE) ── */
+@media (max-width: 375px) {
+  .app-title {
+    font-size: 1.2rem;
+  }
 }
