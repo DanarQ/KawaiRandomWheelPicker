@@ -1,14 +1,23 @@
 import { useState } from "react";
 import { Wheel } from "react-custom-roulette";
 import { Ghost, Cat } from "react-kawaii";
+import useSfx from "../hooks/useSfx";
+import clickSfx from "../assets/sfx/click.mp3";
+import spinEndSfx from "../assets/sfx/spin-end.mp3";
+import Meowsfx from "../assets/sfx/meow.mp3";
 
 function WheelComponent({ data }) {
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(0);
   const [result, setResult] = useState(null);
 
+  const playClick = useSfx(clickSfx);
+  const playSpinEnd = useSfx(spinEndSfx);
+  const playMeow = useSfx(Meowsfx);
+
   const handleSpinClick = () => {
     if (mustSpin || data.length < 2) return;
+    playClick();
     const newPrizeNumber = Math.floor(Math.random() * data.length);
     setPrizeNumber(newPrizeNumber);
     setMustSpin(true);
@@ -18,6 +27,8 @@ function WheelComponent({ data }) {
   const handleStopSpinning = () => {
     setMustSpin(false);
     setResult(data[prizeNumber].option);
+    playSpinEnd();
+    playMeow();
   };
 
   return (

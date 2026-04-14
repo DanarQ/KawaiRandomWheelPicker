@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Cat } from "react-kawaii";
+import useSfx from "../hooks/useSfx";
+import clickSfx from "../assets/sfx/click.mp3";
 
 const PRESET_COLORS = [
   "#ffb3c6",
@@ -16,9 +18,12 @@ function OptionForm({ data, setData }) {
   const [inputText, setInputText] = useState("");
   const [inputColor, setInputColor] = useState("#ffb3c6");
 
+  const playClick = useSfx(clickSfx);
+
   const handleAdd = () => {
     const trimmed = inputText.trim();
     if (!trimmed) return;
+    playClick();
     setData([
       ...data,
       {
@@ -30,6 +35,7 @@ function OptionForm({ data, setData }) {
   };
 
   const handleRemove = (index) => {
+    playClick();
     setData(data.filter((_, i) => i !== index));
   };
 

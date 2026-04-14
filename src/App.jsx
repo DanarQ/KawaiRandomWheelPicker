@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Planet, IceCream } from "react-kawaii";
 import WheelComponent from "./component/WheelComponent";
 import OptionForm from "./component/OptionForm";
+import MusicPlayer from "./component/MusicPlayer";
 import "./App.css";
 
 const DEFAULT_DATA = [
@@ -37,6 +38,7 @@ function App() {
         <WheelComponent data={data} />
         <OptionForm data={data} setData={setData} />
       </main>
+      <MusicPlayer />
     </div>
   );
 }
