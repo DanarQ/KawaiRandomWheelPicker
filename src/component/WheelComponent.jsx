@@ -31,6 +31,17 @@ function WheelComponent({ data }) {
     playMeow();
   };
 
+  const maxLen = data.length > 0 ? Math.max(...data.map((d) => d.option.length)) : 0;
+  const fontSize = maxLen > 20 ? 10 : maxLen > 14 ? 12 : maxLen > 9 ? 13 : 15;
+  const TRUNCATE_AT = 18;
+  const wheelData = data.map((item) => ({
+    ...item,
+    option:
+      item.option.length > TRUNCATE_AT
+        ? item.option.slice(0, TRUNCATE_AT) + "…"
+        : item.option,
+  }));
+
   return (
     <div className="wheel-section">
       <div className="wheel-wrapper">
@@ -39,7 +50,7 @@ function WheelComponent({ data }) {
             <Wheel
               mustStartSpinning={mustSpin}
               prizeNumber={prizeNumber}
-              data={data}
+              data={wheelData}
               backgroundColors={["#ffb3c6", "#c7ceea"]}
               textColors={["#5c3d5e"]}
               onStopSpinning={handleStopSpinning}
@@ -49,7 +60,7 @@ function WheelComponent({ data }) {
               innerBorderWidth={3}
               radiusLineColor="#fce4ec"
               radiusLineWidth={2}
-              fontSize={15}
+              fontSize={fontSize}
               fontFamily="Nunito"
             />
             <div className="wheel-center">

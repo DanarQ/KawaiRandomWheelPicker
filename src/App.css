@@ -162,6 +162,8 @@
   font-size: 1.5rem;
   font-weight: 900;
   color: #c77dbc;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 /* ── Option Form ── */
