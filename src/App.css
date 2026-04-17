@@ -203,6 +203,33 @@
   align-items: center;
 }
 
+.input-wrapper {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper .option-input {
+  width: 100%;
+  padding-right: 48px;
+}
+
+.char-counter {
+  position: absolute;
+  right: 14px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: "Nunito", sans-serif;
+  color: #f0aec4;
+  pointer-events: none;
+  transition: color 0.2s;
+}
+
+.char-counter--warn {
+  color: #e91e8c;
+}
+
 .option-input {
   flex: 1;
   padding: 10px 16px;

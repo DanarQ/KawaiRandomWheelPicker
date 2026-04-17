@@ -51,15 +51,20 @@ function OptionForm({ data, setData }) {
       </div>
 
       <div className="form-input-row">
-        <input
-          className="option-input"
-          type="text"
-          placeholder="Enter option..."
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          onKeyDown={handleKeyDown}
-          maxLength={30}
-        />
+        <div className="input-wrapper">
+          <input
+            className="option-input"
+            type="text"
+            placeholder="Enter option..."
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            onKeyDown={handleKeyDown}
+            maxLength={30}
+          />
+          <span className={`char-counter ${inputText.length >= 28 ? "char-counter--warn" : ""}`}>
+            {inputText.length}/30
+          </span>
+        </div>
         <input
           className="color-input"
           type="color"

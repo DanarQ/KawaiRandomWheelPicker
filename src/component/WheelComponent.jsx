@@ -31,9 +31,13 @@ function WheelComponent({ data }) {
     playMeow();
   };
 
-  const maxLen = data.length > 0 ? Math.max(...data.map((d) => d.option.length)) : 0;
-  const fontSize = maxLen > 20 ? 10 : maxLen > 14 ? 12 : maxLen > 9 ? 13 : 15;
-  const TRUNCATE_AT = 18;
+  const segments = data.length;
+  const maxLen = segments > 0 ? Math.max(...data.map((d) => d.option.length)) : 0;
+  // Score combines text length and segment count (more segments = narrower arc)
+  const score = maxLen + segments * 0.8;
+  const fontSize = score > 32 ? 8 : score > 24 ? 10 : score > 16 ? 12 : score > 10 ? 13 : 15;
+  // Truncate earlier when there are many segments
+  const TRUNCATE_AT = segments > 12 ? 10 : segments > 8 ? 13 : segments > 5 ? 16 : 20;
   const wheelData = data.map((item) => ({
     ...item,
     option:
