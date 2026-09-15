@@ -1,8 +1,8 @@
-import { useState } from "react";
 import { Planet, IceCream } from "react-kawaii";
 import WheelComponent from "./component/WheelComponent";
 import OptionForm from "./component/OptionForm";
 import MusicPlayer from "./component/MusicPlayer";
+import useStoredOptions from "./hooks/useStoredOptions";
 import "./App.css";
 
 const DEFAULT_DATA = [
@@ -25,7 +25,7 @@ const DEFAULT_DATA = [
 ];
 
 function App() {
-  const [data, setData] = useState(DEFAULT_DATA);
+  const { data, warning, spinning, saving, revision, onSpinningChange, updateOptions } = useStoredOptions(DEFAULT_DATA);
 
   return (
     <div className="app">
@@ -34,9 +34,10 @@ function App() {
         <h1 className="app-title"> Wheel Picker</h1>
         <IceCream size={64} mood="blissful" color="#a78bfa" />
       </header>
+      {warning && <p className="storage-warning" role="alert">{warning}</p>}
       <main className="app-main">
-        <WheelComponent data={data} />
-        <OptionForm data={data} setData={setData} />
+        <WheelComponent key={revision} data={data} onSpinningChange={onSpinningChange} disabled={saving} />
+        <OptionForm data={data} setData={updateOptions} disabled={spinning || saving} />
       </main>
       <MusicPlayer />
     </div>

@@ -50,10 +50,20 @@
     0 2px 8px rgba(206, 147, 216, 0.1);
   border: 3px solid #fce4ec;
   min-width: 340px;
+  max-width: 100%;
 }
 
 .wheel-wrapper {
   display: grid;
+  width: 445px;
+  max-width: 100%;
+}
+
+/* Fit the roulette library's viewport-sized container inside the card. */
+.wheel-wrapper > div:not(.wheel-center):not(.wheel-placeholder) {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
 }
 
 /* Both wheel and center overlay share the same grid cell */
@@ -77,6 +87,7 @@
   justify-content: center;
   gap: 14px;
   width: 300px;
+  max-width: 100%;
   height: 300px;
   border: 4px dashed #f8bbd0;
   border-radius: 50%;
@@ -182,6 +193,52 @@
   flex-direction: column;
   gap: 16px;
 }
+
+.option-controls {
+  border: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.storage-warning {
+  max-width: 1000px;
+  margin: 0 auto 20px;
+  padding: 14px 18px;
+  background: #fff4d6;
+  color: #704d00;
+  border: 1px solid #cda44b;
+  border-radius: 12px;
+}
+
+.form-notice, .wheel-note {
+  color: #765578;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.wheel-note, .mode-toggle, .spin-history {
+  width: 100%;
+  max-width: 445px;
+}
+
+.mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #5c3d5e;
+  font-weight: 700;
+}
+
+.option-number { color: #765578; font-size: 0.85rem; }
+.spin-history { color: #5c3d5e; }
+.history-header { display: flex; justify-content: space-between; align-items: center; }
+.history-header h2 { font-size: 1rem; }
+.history-header button { padding: 6px 12px; border: 0; border-radius: 8px; background: #fce4ec; color: #5c3d5e; cursor: pointer; }
+.spin-history ol { max-height: 150px; overflow-y: auto; padding-left: 28px; margin-top: 10px; overflow-wrap: anywhere; }
+button:disabled, fieldset:disabled { opacity: 0.6; }
+button:disabled { cursor: not-allowed; }
 
 .form-header {
   display: flex;
