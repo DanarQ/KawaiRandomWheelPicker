@@ -102,24 +102,12 @@ function WheelComponent({ data, onSpinningChange, disabled }) {
           </div>
         )}
       </div>
-      {numberedLabels && <p className="wheel-note">Wheel numbers match the full names in Options. Large lists have narrow slices; the full winner appears below.</p>}
-      <label className="mode-toggle">
-        <input type="checkbox" checked={noRepeat} disabled={mustSpin || disabled} onChange={(event) => {
-          setNoRepeat(event.target.checked);
-          setUsed([]);
-        }} />
-        No repeats until every name wins
-      </label>
-      <p className="wheel-note">{noRepeat
-        ? `${new Set(used.map((index) => optionKey(data[index].option))).size} of ${new Set(data.map((item) => optionKey(item.option))).size} names picked. A new cycle starts automatically when complete.`
-        : "Every entry has an equal chance on each spin. Repeats are possible."}</p>
-
       <button
         className="spin-btn"
         onClick={handleSpinClick}
         disabled={disabled || mustSpin || data.length < 2}
       >
-        {mustSpin ? "Spinning..." : "SPIN! (●'◡'●)"}
+        {mustSpin ? "Spinning…" : "Spin the wheel"}
       </button>
 
       {result && (
@@ -131,14 +119,30 @@ function WheelComponent({ data, onSpinningChange, disabled }) {
           </div>
         </div>
       )}
-      {history.length > 0 && <section className="spin-history" aria-label="Recent results">
-        <div className="history-header">
-          <h2>Recent results</h2>
-          <button type="button" disabled={mustSpin} onClick={() => setHistory([])}>Clear</button>
-        </div>
-        <ol>{history.map((winner, index) => <li key={index}>{winner}</li>)}</ol>
-      </section>}
-      <p className="wheel-note">Recent results show the last 20 spins, newest first. Editing options or refreshing resets results, mode, and cycle.</p>
+      <div className="wheel-settings">
+        <label className="mode-toggle">
+          <input type="checkbox" checked={noRepeat} disabled={mustSpin || disabled} onChange={(event) => {
+            setNoRepeat(event.target.checked);
+            setUsed([]);
+          }} />
+          <span>No repeats</span>
+        </label>
+        {noRepeat && <p className="cycle-progress">{new Set(used.map((index) => optionKey(data[index].option))).size} / {new Set(data.map((item) => optionKey(item.option))).size} names picked this cycle</p>}
+      </div>
+      <details className="spin-history">
+        <summary>Recent results <span className="count-badge">{history.length}</span></summary>
+        {history.length > 0 ? <>
+          <div className="history-header"><span>Newest first</span><button type="button" disabled={mustSpin || disabled} onClick={() => setHistory([])}>Clear</button></div>
+          <ol>{history.map((winner, index) => <li key={index}>{winner}</li>)}</ol>
+        </> : <p className="wheel-note">Your results will appear here after a spin.</p>}
+      </details>
+      {numberedLabels && <p className="wheel-note numbered-note">Numbers on the wheel match the names in Options.</p>}
+      <details className="wheel-help">
+        <summary>How it works</summary>
+        <p>Each entry has an equal chance on every spin. Repeated winners are possible.</p>
+        <p>Turn on No repeats to pick every name once before a new cycle starts.</p>
+        <p>Options save in this browser. Refreshing or editing options (including updates from another tab) resets the result, mode, cycle, and recent results. The last 20 results are kept until then.</p>
+      </details>
     </div>
   );
 }

@@ -26,6 +26,16 @@ npm run build
 - Daftar panjang memakai nomor roda yang cocok dengan nama lengkap di Options. Irisan tetap makin sempit seiring bertambahnya opsi.
 - Riwayat menampilkan 20 hasil terakhir. Mengubah opsi atau refresh mereset hasil, riwayat, mode, dan siklus. Tombol Clear hanya menghapus riwayat.
 
+## Tampilan dan aksesibilitas
+
+- Roda dan Options berdampingan mulai 960 px; layar lebih kecil memakai satu kolom. Kontrol musik berada di header.
+- Recent results dan How it works dapat dibuka/tutup. Riwayat tertutup secara bawaan dan menampilkan jumlah hasil.
+- Status penyimpanan dibedakan menjadi saving, saved, synced, conflict, dan error. Konflik/error tetap tampil hingga tindakan atau pemulihan berikutnya; teks input dipertahankan jika penambahan gagal.
+- Enter menambah opsi dan fokus kembali ke input setelah berhasil. Popover volume ditutup dengan Escape atau klik di luar.
+- Musik mencoba autoplay ketika halaman dibuka. Jika diblokir, aplikasi mencoba lagi pada klik atau penekanan tombol pertama yang sesuai. Jika tetap ditolak, tombol Play tetap tersedia tanpa mengganggu aplikasi.
+- Preferensi musik dan volume disimpan terpisah dari daftar opsi. Pause menghentikan percobaan otomatis, termasuk setelah refresh; penolakan autoplay oleh browser tidak dianggap sebagai pilihan Pause pengguna.
+- Kontrol sentuh minimal 44 px, fokus keyboard terlihat, dan reduced motion menonaktifkan animasi dekoratif tanpa mengubah animasi roda.
+
 ## Package yang di pakai
 ### react-custom-roulette
 Digunakan untuk membuat komponen roda undian (wheel picker)

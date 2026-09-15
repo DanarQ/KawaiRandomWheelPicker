@@ -6,13 +6,13 @@ export default function useStoredOptions(defaults) {
     let raw = null;
     try {
       raw = localStorage.getItem(STORAGE_KEY);
-      return { raw, data: parseOptions(raw, defaults), warning: "" };
+      return { raw, data: parseOptions(raw, defaults), status: { type: "saved", message: raw === null ? "Ready to save in this browser" : "Saved in this browser" } };
     } catch {
-      return { raw, data: defaults, warning: "Saved options could not be loaded. Showing the default list. Your saved data has not been overwritten." };
+      return { raw, data: defaults, status: { type: "error", message: "Saved options could not be loaded. Your saved data is unchanged. Refresh to try again." } };
     }
   });
   const [data, setData] = useState(initial.data);
-  const [warning, setWarning] = useState(initial.warning);
+  const [status, setStatus] = useState(initial.status);
   const [spinning, setSpinning] = useState(false);
   const [saving, setSaving] = useState(false);
   const [revision, setRevision] = useState(0);
@@ -35,9 +35,9 @@ export default function useStoredOptions(defaults) {
       baseline.current = raw;
       setData(next);
       setRevision((value) => value + 1);
-      setWarning("Options updated from another tab. Results and cycle have been reset.");
+      setStatus((previous) => ["error", "conflict"].includes(previous.type) ? previous : { type: "synced", message: "Updated from another tab" });
     } catch {
-      setWarning("Options from another tab could not be loaded. Your current list has been kept.");
+      setStatus({ type: "error", message: "Could not load changes from another tab. Your list is unchanged. Refresh to try again." });
     }
   }, [defaults]);
 
@@ -66,23 +66,24 @@ export default function useStoredOptions(defaults) {
     if (spinningRef.current || savingRef.current) return false;
     savingRef.current = true;
     setSaving(true);
+    setStatus({ type: "saving", message: "Saving…" });
     try {
       const result = await saveOptions(localStorage, navigator.locks, baseline.current, nextData);
       if (result.conflict) {
         savingRef.current = false;
         sync();
-        setWarning("The list changed in another tab. Your edit was not saved. Review the updated list and try again.");
+        setStatus({ type: "conflict", message: "Another tab changed this list. Your edit was not saved. Review the latest options and try again." });
         return false;
       }
       baseline.current = result.raw;
       setData(nextData);
       setRevision((value) => value + 1);
-      setWarning("");
+      setStatus({ type: "saved", message: "Saved in this browser" });
       return true;
     } catch {
-      setWarning(navigator.locks
+      setStatus({ type: "error", message: navigator.locks
         ? "Changes could not be saved in this browser. Your edit was not applied; entered text is still available. Please try again."
-        : "Saving is unavailable in this browser. Your edit was not applied. Open this site over HTTPS or localhost using a browser that supports Web Locks.");
+        : "Saving is unavailable in this browser. Your edit was not applied. Open this site over HTTPS or localhost using a browser that supports Web Locks." });
       return false;
     } finally {
       savingRef.current = false;
@@ -91,5 +92,5 @@ export default function useStoredOptions(defaults) {
     }
   };
 
-  return { data, warning, spinning, saving, revision, onSpinningChange, updateOptions };
+  return { data, status, spinning, saving, revision, onSpinningChange, updateOptions };
 }

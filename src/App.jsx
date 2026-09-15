@@ -25,21 +25,22 @@ const DEFAULT_DATA = [
 ];
 
 function App() {
-  const { data, warning, spinning, saving, revision, onSpinningChange, updateOptions } = useStoredOptions(DEFAULT_DATA);
+  const { data, status, spinning, saving, revision, onSpinningChange, updateOptions } = useStoredOptions(DEFAULT_DATA);
 
   return (
     <div className="app">
       <header className="app-header">
-        <Planet size={64} mood="blissful" color="#FDA7DC" />
-        <h1 className="app-title"> Wheel Picker</h1>
-        <IceCream size={64} mood="blissful" color="#a78bfa" />
+        <div className="app-brand">
+          <Planet size={48} mood="blissful" color="#FDA7DC" />
+          <h1 className="app-title">Wheel Picker</h1>
+          <IceCream size={40} mood="blissful" color="#a78bfa" />
+        </div>
+        <MusicPlayer />
       </header>
-      {warning && <p className="storage-warning" role="alert">{warning}</p>}
       <main className="app-main">
         <WheelComponent key={revision} data={data} onSpinningChange={onSpinningChange} disabled={saving} />
-        <OptionForm data={data} setData={updateOptions} disabled={spinning || saving} />
+        <OptionForm data={data} setData={updateOptions} disabled={spinning || saving} busyLabel={spinning ? "Spinning…" : saving ? "Saving…" : ""} status={status} />
       </main>
-      <MusicPlayer />
     </div>
   );
 }
