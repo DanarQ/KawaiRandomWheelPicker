@@ -1,54 +1,81 @@
-# Simple Project Random Wheel Picker
+﻿# Kawaii Random Wheel Picker
 
-Project ini pakai react versi 18 yang di install melalui Vite, Silahkan yang mau clone terus di edit untuk keperluan pribadi
+A pastel random picker built with React 18 and Vite. Add your own options, spin the wheel, and hear the celebration when a winner is revealed.
 
-## Menjalankan dan memeriksa
+[Open the live app](https://danarq.id/KawaiRandomWheelPicker/)
+
+## Screenshots
+
+Desktop view after a completed spin:
+
+![Desktop wheel picker with a winning result and editable options](output/playwright/wheel-picker-desktop.png)
+
+<details>
+<summary>Mobile screenshot</summary>
+
+<img src="output/playwright/wheel-picker-mobile.png" width="390" alt="Mobile wheel picker with the result above the options editor" />
+
+</details>
+
+## Run locally
 
 ```bash
-npm install
+npm ci
 npm run dev
+```
+
+## Checks
+
+```bash
 npm test
 npm run lint
 npm run build
+npm run preview
 ```
 
-## Perilaku wheel
+## Wheel behavior
 
-- Opsi dan warnanya disimpan otomatis di localStorage untuk setiap browser/profil. Refresh mempertahankan daftar, termasuk daftar kosong. Tidak ada sinkronisasi antarperangkat.
-- Jika data gagal dibaca atau disimpan, aplikasi menampilkan peringatan. Data yang gagal dibaca tidak ditimpa otomatis saat aplikasi dibuka.
-- Tab pada browser/profil yang sama otomatis menyinkronkan daftar. Saat spin berlangsung, pembaruan dari tab lain ditunda hingga spin selesai dan mereset hasil serta siklus.
-- Sebelum menyimpan, aplikasi memeriksa apakah daftar di tab masih terbaru. Jika terjadi konflik, daftar terbaru dimuat dan pengguna diminta mengulangi edit; teks input tetap dipertahankan.
-- Penyimpanan memakai Web Locks untuk mencegah dua tab menulis bersamaan. Gunakan browser yang mendukung Web Locks melalui HTTPS (termasuk GitHub Pages) atau localhost. Semua tab harus menjalankan versi aplikasi terbaru. Jika penyimpanan gagal, edit tidak diterapkan.
-- Mode biasa memberi peluang sama untuk setiap entri dan mengizinkan hasil berulang.
-- Mode **No repeats until every name wins** memilih nama yang belum menang dalam siklus tersebut. Setelah semua nama menang, putaran berikutnya memulai siklus baru.
-- Nama duplikat baru ditolak, termasuk perbedaan kapital dan spasi. Duplikat dari simpanan lama diberi peringatan agar bisa dirapikan tanpa menghapus data otomatis.
-- Pengeditan opsi dan perubahan mode dikunci selama animasi. Pemenang ditetapkan saat spin dimulai.
-- Daftar panjang memakai nomor roda yang cocok dengan nama lengkap di Options. Irisan tetap makin sempit seiring bertambahnya opsi.
-- Riwayat menampilkan 20 hasil terakhir. Mengubah opsi atau refresh mereset hasil, riwayat, mode, dan siklus. Tombol Clear hanya menghapus riwayat.
+- Each entry has an equal chance on every spin. Normal mode allows repeated winners.
+- **No repeats** picks every name once before starting a new cycle. Existing duplicate names count as the same name.
+- The winner is captured when the spin starts. Editing and mode changes are disabled during the animation.
+- Long lists use numbered wheel labels matching the full names in Options.
+- Recent results holds the last 20 winners. Clear removes history only; refreshing or changing options resets the result, history, mode, and cycle.
+- New duplicate names are rejected after normalizing capitalization, whitespace, and Unicode presentation. Older saved duplicates display a warning without being removed automatically.
 
-## Tampilan dan aksesibilitas
+## Storage and synchronization
 
-- Roda dan Options berdampingan mulai 960 px; layar lebih kecil memakai satu kolom. Kontrol musik berada di header.
-- Recent results dan How it works dapat dibuka/tutup. Riwayat tertutup secara bawaan dan menampilkan jumlah hasil.
-- Status penyimpanan dibedakan menjadi saving, saved, synced, conflict, dan error. Konflik/error tetap tampil hingga tindakan atau pemulihan berikutnya; teks input dipertahankan jika penambahan gagal.
-- Enter menambah opsi dan fokus kembali ke input setelah berhasil. Popover volume ditutup dengan Escape atau klik di luar.
-- Musik mencoba autoplay ketika halaman dibuka. Jika diblokir, aplikasi mencoba lagi pada klik atau penekanan tombol pertama yang sesuai. Jika tetap ditolak, tombol Play tetap tersedia tanpa mengganggu aplikasi.
-- Preferensi musik dan volume disimpan terpisah dari daftar opsi. Pause menghentikan percobaan otomatis, termasuk setelah refresh; penolakan autoplay oleh browser tidak dianggap sebagai pilihan Pause pengguna.
-- Kontrol sentuh minimal 44 px, fokus keyboard terlihat, dan reduced motion menonaktifkan animasi dekoratif tanpa mengubah animasi roda.
+- Options and colors are saved in localStorage for the current browser/profile, including an empty list. There is no cross-device synchronization.
+- Tabs in the same browser/profile synchronize automatically. Incoming changes during a spin wait until it finishes, then reset the result and cycle.
+- Before saving, the app checks the stored revision. Conflicting edits reload the latest list and ask you to retry while preserving the input text.
+- Web Locks prevent simultaneous tab writes. Use a browser supporting Web Locks over HTTPS or localhost, with all tabs running the latest app version.
+- Read/write failures display a warning. Unreadable data is not automatically overwritten, and failed edits are not applied.
 
-## Package yang di pakai
-### react-custom-roulette
-Digunakan untuk membuat komponen roda undian (wheel picker)
-- Install:
-  ```bash
-  npm install react-custom-roulette
-  ```
-### react kawaii
-Digunakan untuk emoticon di aplikasi
-- Install
-  ```bash
-  npm install --save react-kawaii
-  ```
+## Audio, layout, and accessibility
 
-### Screenshot aplikasi
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/ee84fe0d-6978-4cf5-969c-0265cb61828b" />
+- Sound effects share a Web Audio context. Tapping **Spin the wheel** resumes the context and preloads the click, completion, and meow effects before the delayed winner callback runs. This addresses iPhone Safari's user-interaction requirement for audio.
+- Repeated effects reuse decoded audio but create fresh playback sources. A later tap retries interrupted audio or failed sound downloads.
+- Background music tries autoplay, then retries on the first eligible click or key press if blocked. The Play button remains available if playback is still blocked.
+- Music pause and volume preferences are stored separately from options. A browser autoplay rejection does not save a Pause preference. Music controls affect background music; wheel effects remain separate.
+- The wheel and Options appear side by side from 960 px, with a single column below that width. Music controls are in the header.
+- Recent results and How it works are collapsible. History starts collapsed and displays its result count.
+- Save status distinguishes saving, saved, synced, conflict, and error. Conflict/error messages remain until another action or recovery.
+- Enter adds an option and returns focus to the input after success. Escape or an outside click closes the volume popover.
+- Touch controls are at least 44 px, keyboard focus is visible, and reduced motion disables decorative animations while preserving the wheel animation.
+
+Audio verification includes automated regression tests and desktop Chromium playback measurements. Physical iPhone/Safari playback has not yet been tested.
+
+## Deploy to GitHub Pages
+
+```bash
+npm run deploy
+```
+
+The predeploy script builds the app, then `gh-pages` publishes `dist` to the `gh-pages` branch. GitHub Pages serves that branch at `/`, with the app's Vite base set to `/KawaiRandomWheelPicker/`. Git credentials with push access are required.
+
+## Main packages
+
+- React 18 and React DOM
+- Vite with the React plugin
+- [react-custom-roulette](https://www.npmjs.com/package/react-custom-roulette) for the wheel
+- [react-kawaii](https://www.npmjs.com/package/react-kawaii) for character illustrations
+- Lucide React for icons

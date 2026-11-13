@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { sfxPlayer } from "../sfxPlayback";
 
 /**
  * useSfx — plays a sound effect on demand.
@@ -6,16 +6,9 @@ import { useRef } from "react";
  * @returns {() => void} play function
  */
 function useSfx(src) {
-  const audioRef = useRef(null);
-
   const play = () => {
-    if (!src) return;
-    if (!audioRef.current) {
-      audioRef.current = new Audio(src);
-    }
-    // rewind to start so rapid clicks always fire
-    audioRef.current.currentTime = 0;
-    audioRef.current.play().catch(() => {});
+    // Keep playback failures from interrupting the wheel or option editing.
+    sfxPlayer.play(src).catch(() => {});
   };
 
   return play;

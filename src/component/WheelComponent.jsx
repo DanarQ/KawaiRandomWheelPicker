@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { Wheel } from "react-custom-roulette";
 import { Ghost, Cat } from "react-kawaii";
 import useSfx from "../hooks/useSfx";
+import { sfxPlayer } from "../sfxPlayback";
 import clickSfx from "../assets/sfx/click.mp3";
 import spinEndSfx from "../assets/sfx/spin-end.mp3";
 import Meowsfx from "../assets/sfx/meow.mp3";
@@ -25,6 +26,8 @@ function WheelComponent({ data, onSpinningChange, disabled }) {
 
   const handleSpinClick = () => {
     if (disabled || pendingSpin.current || data.length < 2) return;
+    // Unlock audio during the tap and preload both delayed winner effects.
+    sfxPlayer.prepare([clickSfx, spinEndSfx, Meowsfx]).catch(() => {});
     playClick();
     const selection = pickOption(data, noRepeat ? used : []);
     const winner = data[selection.index].option;
